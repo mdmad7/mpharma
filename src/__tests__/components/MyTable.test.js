@@ -4,7 +4,6 @@ import MyTable from "../../components/MyTable";
 
 afterEach(() => {
   cleanup();
-  jest.resetModules();
 });
 
 describe("<MyTable />", () => {
@@ -21,6 +20,15 @@ describe("<MyTable />", () => {
     "5": { id: 5, price: 5, date: "2017-01-01T17:16:32+00:00" },
     "6": { id: 6, price: 13.2, date: "2018-11-01T17:16:32+00:00" }
   };
+
+  let getProduct, setModal, setOpen, setEditMode;
+
+  beforeEach(() => {
+    getProduct = jest.fn();
+    setModal = jest.fn();
+    setOpen = jest.fn();
+    setEditMode = jest.fn();
+  });
 
   it("should display loading ui", () => {
     const { getByText } = render(
@@ -66,11 +74,6 @@ describe("<MyTable />", () => {
   });
 
   it("should call product edit modal", () => {
-    let getProduct = jest.fn();
-    let setModal = jest.fn();
-    let setOpen = jest.fn();
-    let setEditMode = jest.fn();
-
     const { getByTestId } = render(
       <MyTable
         products={products}
@@ -98,10 +101,26 @@ describe("<MyTable />", () => {
     expect(setEditMode).toHaveBeenCalledWith(true);
   });
 
+  it("should call product add modal", () => {
+    const { getByText } = render(
+      <MyTable
+        products={products}
+        prices={prices}
+        getProduct={getProduct}
+        setModal={setModal}
+        setOpen={setOpen}
+      />
+    );
+    fireEvent.click(getByText("Add Product"));
+    expect(getProduct).toHaveBeenCalledTimes(1);
+    expect(setModal).toHaveBeenCalledTimes(1);
+    expect(setOpen).toHaveBeenCalledTimes(1);
+
+    expect(setModal).toHaveBeenCalledWith("productForm");
+    expect(setOpen).toHaveBeenCalledWith(true);
+  });
+
   it("should call price history modal", () => {
-    let getProduct = jest.fn();
-    let setModal = jest.fn();
-    let setOpen = jest.fn();
     const { getByTestId } = render(
       <MyTable
         products={products}
@@ -126,9 +145,6 @@ describe("<MyTable />", () => {
   });
 
   it("should call delete product modal", () => {
-    let getProduct = jest.fn();
-    let setModal = jest.fn();
-    let setOpen = jest.fn();
     const { getByTestId } = render(
       <MyTable
         products={products}

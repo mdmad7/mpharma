@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -38,64 +39,79 @@ const MyTable = props => {
   }
 
   return (
-    <Paper>
-      <Table aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Products</TableCell>
-            <TableCell align="right">Price</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Object.values(products).map(product => (
-            <TableRow key={product.id} data-testid="product-tr">
-              <TableCell component="th" scope="row">
-                {product.name}
-              </TableCell>
-              <TableCell align="right">
-                {prices[product.prices[0]].price}
-              </TableCell>
-              <TableCell align="right">
-                <IconButton
-                  data-testid={`${product.id}-priceList`}
-                  onClick={() => {
-                    getProduct(product);
-                    setModal("priceList");
-                    setOpen(true);
-                  }}
-                >
-                  <HistoryIcon style={{ cursor: "pointer" }} />
-                </IconButton>{" "}
-                <IconButton
-                  data-testid={`${product.id}-edit`}
-                  onClick={() => {
-                    setEditMode(true);
-                    getProduct({
-                      ...product,
-                      price: prices[product.prices[0]].price
-                    });
-                    setOpen(true);
-                    setModal("productForm");
-                  }}
-                >
-                  <EditIcon style={{ cursor: "pointer" }} />
-                </IconButton>{" "}
-                <IconButton
-                  data-testid={`${product.id}-delete`}
-                  onClick={() => {
-                    getProduct(product);
-                    setModal("delete");
-                    setOpen(true);
-                  }}
-                >
-                  <DeleteIcon style={{ cursor: "pointer" }} />
-                </IconButton>
-              </TableCell>
+    <>
+      <div style={{ marginBottom: "32px", textAlign: "right" }}>
+        <Button
+          variant="contained"
+          disabled={loadingProducts}
+          onClick={() => {
+            setOpen(true);
+            getProduct({ id: Date.now(), priceId: Date.now(), prices: [] });
+            setModal("productForm");
+          }}
+        >
+          Add Product
+        </Button>
+      </div>
+      <Paper>
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Products</TableCell>
+              <TableCell align="right">Price</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Paper>
+          </TableHead>
+          <TableBody>
+            {Object.values(products).map(product => (
+              <TableRow key={product.id} data-testid="product-tr">
+                <TableCell component="th" scope="row">
+                  {product.name}
+                </TableCell>
+                <TableCell align="right">
+                  {prices[product.prices[0]].price}
+                </TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    data-testid={`${product.id}-priceList`}
+                    onClick={() => {
+                      getProduct(product);
+                      setModal("priceList");
+                      setOpen(true);
+                    }}
+                  >
+                    <HistoryIcon style={{ cursor: "pointer" }} />
+                  </IconButton>{" "}
+                  <IconButton
+                    data-testid={`${product.id}-edit`}
+                    onClick={() => {
+                      setEditMode(true);
+                      getProduct({
+                        ...product,
+                        price: prices[product.prices[0]].price
+                      });
+                      setOpen(true);
+                      setModal("productForm");
+                    }}
+                  >
+                    <EditIcon style={{ cursor: "pointer" }} />
+                  </IconButton>{" "}
+                  <IconButton
+                    data-testid={`${product.id}-delete`}
+                    onClick={() => {
+                      getProduct(product);
+                      setModal("delete");
+                      setOpen(true);
+                    }}
+                  >
+                    <DeleteIcon style={{ cursor: "pointer" }} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
+    </>
   );
 };
 

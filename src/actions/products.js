@@ -12,10 +12,8 @@ export const fetchProducts = () => {
     dispatch(setFetchState("products", true));
     dispatch(setErrorState("products", undefined));
 
-    return axios({
-      method: "get",
-      url: `http://www.mocky.io/v2/5c3e15e63500006e003e9795`
-    })
+    return axios
+      .get(`http://www.mocky.io/v2/5c3e15e63500006e003e9795`)
       .then(response => {
         if (response.status === 200) {
           const sorted = sortedPriceDate(response.data.products);

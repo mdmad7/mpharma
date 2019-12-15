@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import PropTypes from "prop-types";
 
@@ -33,11 +32,6 @@ const App = ({
     const archivedPrices = !!localStorage.getItem("prices");
     (!archivedProducts || !archivedPrices) && fetchProducts();
   }, []); //eslint-disable-line
-
-  const handleClickOpen = () => {
-    setOpen(true);
-    setActiveProduct({ id: Date.now(), priceId: Date.now(), prices: [] });
-  };
 
   const handleProductDelete = () => {
     deleteProduct(activeProduct.id);
@@ -83,20 +77,6 @@ const App = ({
       </Dialog>
 
       <Container>
-        <div style={{ marginBottom: "32px", textAlign: "right" }}>
-          <Button
-            data-testid="addDrug"
-            variant="contained"
-            disabled={loadingProducts}
-            onClick={() => {
-              handleClickOpen();
-              setModal("productForm");
-            }}
-          >
-            Add Product
-          </Button>
-        </div>
-
         <MyTable
           products={products}
           prices={prices}

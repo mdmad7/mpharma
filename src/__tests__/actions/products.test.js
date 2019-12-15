@@ -1,14 +1,27 @@
-import axios from "axios";
+import mockAxios from "axios";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
+
 import {
   deleteProduct,
   addProduct,
   fetchProducts
 } from "../../actions/products";
+
 import types from "../../utils/types";
 
-jest.mock("axios");
+const mockStore = configureMockStore([thunk]);
 
 describe("product actions", () => {
+  let store;
+
+  beforeEach(() => {
+    store = mockStore({});
+
+    // store.dispatch = jest.fn();
+    store.clearActions();
+  });
+
   it("should create an action to delete product", () => {
     const payload = Date.now();
 
@@ -58,68 +71,112 @@ describe("product actions", () => {
     expect(addProduct(product)).toEqual(expectedAction);
   });
 
-  // it("should create an action to fetch products from api", async () => {
-  //   const data = {
-  //     products: [
-  //       {
-  //         id: 1,
-  //         name: "Exforge 10mg",
-  //         prices: [
-  //           {
-  //             id: 1,
-  //             price: 10.99,
-  //             date: "2019-01-01T17:16:32+00:00"
-  //           },
-  //           {
-  //             id: 2,
-  //             price: 9.2,
-  //             date: "2018-11-01T17:16:32+00:00"
-  //           }
-  //         ]
-  //       },
-  //       {
-  //         id: 2,
-  //         name: "Exforge 20mg",
-  //         prices: [
-  //           {
-  //             id: 3,
-  //             price: 12.0,
-  //             date: "2019-01-01T17:16:32+00:00"
-  //           },
-  //           {
-  //             id: 4,
-  //             price: 13.2,
-  //             date: "2018-11-01T17:16:32+00:00"
-  //           }
-  //         ]
-  //       },
-  //       {
-  //         id: 3,
-  //         name: "Paracetamol 20MG",
-  //         prices: [
-  //           {
-  //             id: 5,
-  //             price: 5.0,
-  //             date: "2017-01-01T17:16:32+00:00"
-  //           },
-  //           {
-  //             id: 6,
-  //             price: 13.2,
-  //             date: "2018-11-01T17:16:32+00:00"
-  //           }
-  //         ]
-  //       }
-  //     ]
-  //   };
+  it("should create an action to fetch products from api", async () => {
+    let data = {
+      status: 200,
+      data: {
+        products: [
+          {
+            id: 1,
+            name: "Exforge 10mg",
+            prices: [
+              {
+                id: 1,
+                price: 10.99,
+                date: "2019-01-01T17:16:32+00:00"
+              },
+              {
+                id: 2,
+                price: 9.2,
+                date: "2018-11-01T17:16:32+00:00"
+              }
+            ]
+          },
+          {
+            id: 2,
+            name: "Exforge 20mg",
+            prices: [
+              {
+                id: 3,
+                price: 12.0,
+                date: "2019-01-01T17:16:32+00:00"
+              },
+              {
+                id: 4,
+                price: 13.2,
+                date: "2018-11-01T17:16:32+00:00"
+              }
+            ]
+          },
+          {
+            id: 3,
+            name: "Paracetamol 20MG",
+            prices: [
+              {
+                id: 5,
+                price: 5.0,
+                date: "2017-01-01T17:16:32+00:00"
+              },
+              {
+                id: 6,
+                price: 13.2,
+                date: "2018-11-01T17:16:32+00:00"
+              }
+            ]
+          }
+        ]
+      }
+    };
 
-  //   axios.get.mockImplementationOnce(() => Promise.resolve(data));
-  //   await expect(fetchData('react')).resolves.toEqual(data);
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(data));
+    await store.dispatch(fetchProducts());
 
-  //   const expectedAction = {
-  //     type: types.FETCHING_PRODUCTS_SUCCESS,
-  //     payload
-  //   };
+    let expectedActions = [
+      { type: "SET_FETCH_STATE", entity: "products", fetchState: true },
+      { type: "SET_ERROR_STATE", entity: "products", error: undefined },
+      {
+        type: "FETCHING_PRODUCTS_SUCCESS",
+        entities: {
+          prices: {
+            "1": { id: 1, price: 10.99, date: "2019-01-01T17:16:32+00:00" },
+            "2": { id: 2, price: 9.2, date: "2018-11-01T17:16:32+00:00" },
+            "3": { id: 3, price: 12, date: "2019-01-01T17:16:32+00:00" },
+            "4": { id: 4, price: 13.2, date: "2018-11-01T17:16:32+00:00" },
+            "5": { id: 5, price: 5, date: "2017-01-01T17:16:32+00:00" },
+            "6": { id: 6, price: 13.2, date: "2018-11-01T17:16:32+00:00" }
+          },
+          products: {
+            "1": { id: 1, name: "Exforge 10mg", prices: [1, 2] },
+            "2": { id: 2, name: "Exforge 20mg", prices: [3, 4] },
+            "3": { id: 3, name: "Paracetamol 20MG", prices: [6, 5] }
+          }
+        }
+      },
+      { type: "SET_FETCH_STATE", entity: "products", fetchState: false }
+    ];
 
-  //   expect(fetchProducts(product)).toEqual(expectedAction);
-  // });
+    expect(store.getActions()).toEqual(expectedActions);
+  });
+
+  it("should create an action to fetch products from api that fails", async () => {
+    let data = {
+      status: 500,
+      message: "Network Error"
+    };
+
+    mockAxios.get.mockImplementationOnce(() => Promise.reject(data));
+    await store.dispatch(fetchProducts());
+
+    let expectedActions = [
+      { type: "SET_FETCH_STATE", entity: "products", fetchState: true },
+      { type: "SET_ERROR_STATE", entity: "products", error: undefined },
+      { type: "SET_FETCH_STATE", entity: "products", fetchState: false },
+      {
+        type: "SET_ERROR_STATE",
+        entity: "products",
+        error: "Network Error"
+      }
+    ];
+    expect(store.getActions()).toEqual(expectedActions);
+  });
 });
