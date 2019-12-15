@@ -1,4 +1,5 @@
 import types from "../utils/types";
+import { removeObjectKey } from "../utils/helpers";
 
 let initialState = !!localStorage.getItem("products")
   ? JSON.parse(localStorage.getItem("products"))
@@ -23,12 +24,7 @@ export default (state = initialState, action) => {
       return updated;
 
     case types.DELETE_PRODUCT:
-      const newState = Object.values(state).reduce((acc, cur) => {
-        if (cur.id !== action.payload) {
-          acc[cur.id] = cur;
-        }
-        return acc;
-      }, {});
+      const newState = removeObjectKey(state, action.payload);
 
       localStorage.setItem("products", JSON.stringify(newState));
 
