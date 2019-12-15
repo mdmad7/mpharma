@@ -13,10 +13,6 @@ describe("products reducer", () => {
     expect(reducer(undefined, {})).toEqual({});
   });
 
-  it("should set products from localStorage if it exists", () => {
-    expect(reducer(entities.products, {})).toEqual(entities.products);
-  });
-
   it("should set prices from FETCHING_PRODUCTS_SUCCESS payload", () => {
     const fetched = {
       ...entities.products,

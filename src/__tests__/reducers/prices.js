@@ -17,10 +17,6 @@ describe("prices reducer", () => {
     expect(reducer(undefined, {})).toEqual({});
   });
 
-  it("should set prices from localStorage if it exists", () => {
-    expect(reducer(entities.prices, {})).toEqual(entities.prices);
-  });
-
   it("should set prices from FETCHING_PRODUCTS_SUCCESS payload", () => {
     const fetched = {
       ...entities.prices,

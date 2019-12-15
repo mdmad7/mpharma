@@ -36,38 +36,34 @@ export const fetchProducts = () => {
 };
 
 export const addProduct = product => {
-  return dispatch => {
-    const payload = {
-      product: {
-        [product.id]: {
-          id: product.id,
-          name: product.name,
-          prices: product.priceId
-            ? [product.priceId, ...product.prices]
-            : [...product.prices]
-        }
-      },
-      price: product.priceId && {
-        [product.priceId]: {
-          id: product.priceId,
-          price: parseFloat(product.price),
-          date: new Date().toISOString()
-        }
+  const payload = {
+    product: {
+      [product.id]: {
+        id: product.id,
+        name: product.name,
+        prices: product.priceId
+          ? [product.priceId, ...product.prices]
+          : [...product.prices]
       }
-    };
+    },
+    price: product.priceId && {
+      [product.priceId]: {
+        id: product.priceId,
+        price: parseFloat(product.price),
+        date: new Date().toISOString()
+      }
+    }
+  };
 
-    dispatch({
-      type: types.ADD_PRODUCT,
-      payload
-    });
+  return {
+    type: types.ADD_PRODUCT,
+    payload
   };
 };
 
 export const deleteProduct = payload => {
-  return dispatch => {
-    dispatch({
-      type: types.DELETE_PRODUCT,
-      payload
-    });
+  return {
+    type: types.DELETE_PRODUCT,
+    payload
   };
 };
