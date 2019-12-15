@@ -40,7 +40,7 @@ const MyTable = props => {
 
   return (
     <>
-      <div style={{ marginBottom: "32px", textAlign: "right" }}>
+      <div style={{ margin: "32px 0", textAlign: "right" }}>
         <Button
           variant="contained"
           disabled={loadingProducts}
@@ -59,6 +59,7 @@ const MyTable = props => {
             <TableRow>
               <TableCell>Products</TableCell>
               <TableCell align="right">Price</TableCell>
+              <TableCell align="right"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
