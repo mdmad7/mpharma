@@ -12,8 +12,8 @@ const PriceList = ({ activeProduct, prices }) => {
       <DialogTitle id="alert-dialog-title"> Price History</DialogTitle>
       <DialogContent>
         <List>
-          {(activeProduct.prices || []).map(price => (
-            <ListItem key={price}>
+          {activeProduct.prices.map(price => (
+            <ListItem key={price} data-testid="product-priceList">
               <ListItemText
                 secondary={new Date(prices[price].date).toGMTString()}
                 primary={prices[price].price}

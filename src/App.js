@@ -39,34 +39,9 @@ const App = ({
     setActiveProduct({ id: Date.now(), priceId: Date.now(), prices: [] });
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleChange = e => {
-    if (e.target.name === "name") {
-      setActiveProduct({ ...activeProduct, name: e.target.value });
-    }
-
-    if (e.target.name === "price") {
-      setActiveProduct({
-        ...activeProduct,
-        price: e.target.value,
-        priceId: activeProduct.priceId ? activeProduct.priceId : Date.now()
-      });
-    }
-  };
-
   const handleProductDelete = () => {
     deleteProduct(activeProduct.id);
     setOpen(false);
-  };
-
-  const handleAddProduct = () => {
-    if (activeProduct.name && activeProduct.price) {
-      handleClose();
-      addProduct(activeProduct);
-    }
   };
 
   const getProduct = product => {
@@ -78,7 +53,7 @@ const App = ({
 
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         onExited={() => {
           setActiveProduct({});
           setEditMode(false);
@@ -89,9 +64,8 @@ const App = ({
           <ProductForm
             editMode={editMode}
             activeProduct={activeProduct}
-            handleChange={handleChange}
-            handleClose={handleClose}
-            handleAddProduct={handleAddProduct}
+            setOpen={setOpen}
+            addProduct={addProduct}
           />
         )}
 

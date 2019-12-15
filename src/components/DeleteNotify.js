@@ -7,19 +7,27 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import Button from "@material-ui/core/Button";
 
 const DeleteProduct = ({ activeProduct, handleProductDelete, setOpen }) => {
+  let someText = `Are you sure you want to remove ${activeProduct.name}?`;
   return (
     <>
       <DialogTitle id="alert-dialog-title">Delete Product</DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          Are you sure you want to remove {`${activeProduct.name}`}?
-        </DialogContentText>
+        <DialogContentText>{someText}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setOpen(false)} color="primary">
+        <Button
+          data-testid={`${activeProduct.id}-cancel-delete`}
+          onClick={() => setOpen(false)}
+          color="primary"
+        >
           No
         </Button>
-        <Button onClick={handleProductDelete} color="primary" autoFocus>
+        <Button
+          data-testid={`${activeProduct.id}-confirm-delete`}
+          onClick={() => handleProductDelete()}
+          color="primary"
+          autoFocus
+        >
           Yes
         </Button>
       </DialogActions>
