@@ -3,6 +3,7 @@ import types from "../utils/types";
 let initialState = !!localStorage.getItem("prices")
   ? JSON.parse(localStorage.getItem("prices"))
   : {};
+
 export default (state = initialState, action) => {
   switch (action.type) {
     case types.FETCHING_PRODUCTS_SUCCESS:

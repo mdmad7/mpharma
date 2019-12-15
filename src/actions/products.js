@@ -3,6 +3,7 @@ import types from "../utils/types";
 
 import { setErrorState } from "./errors";
 import { setFetchState } from "./fetching";
+
 import normalizeProducts from "../utils/normalizeProducts";
 import { sortedPriceDate } from "../utils/helpers";
 

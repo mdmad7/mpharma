@@ -3,7 +3,9 @@ import { connect } from "react-redux";
 import { fetchProducts } from "./actions/products";
 const App = ({ fetchProducts }) => {
   useEffect(() => {
-    fetchProducts();
+    const archivedProducts = !!localStorage.getItem("products");
+    const archivedPrices = !!localStorage.getItem("prices");
+    (!archivedProducts || !archivedPrices) && fetchProducts();
   }, []); //eslint-disable-line
 
   return (
